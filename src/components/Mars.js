@@ -1,5 +1,6 @@
 // @ts-nocheck
 import React, { useEffect, useState } from 'react';
+import Navbar from './Navbar';
 
 const apiKey = process.env.REACT_APP_NASA_KEY;
 
@@ -8,83 +9,128 @@ const Mars = () => {
     const [camera, setCamera] = useState('fhaz');
     const [sol, setSol] = useState(0);
     const [marsPhoto, setMarsPhoto] = useState(null);
+    const [roverData, setRoverData] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        fetchMarsPhoto();
-        async function fetchMarsPhoto() {
-        try {
-            const response = await fetch(
-                `https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/photos?sol=${sol}&camera=${camera}&api_key=${apiKey}`
-            );
-            const data = await response.json();
-            console.log(data);
-            setMarsPhoto(data);
-        } 
-        catch (error) {
-            console.error('Error fetching photos:', error);
-        }
+        const fetchRoverData = async () => {
+            try {
+                const response = await fetch(
+                    `https://api.nasa.gov/mars-photos/api/v1/manifests/${rover}?api_key=${apiKey}`
+                );
+                const data = await response.json();
+                console.log(data)
+                setRoverData(data.photo_manifest);
+                setIsLoading(false);
+            } 
+            catch (error) {
+                console.error('Error fetching rover data:', error);
+                setIsLoading(false);
+            }
         };
-}, [rover, camera, sol]);
+        fetchRoverData();
+    }, [rover]);
 
-return (
-    <div>
-        {marsPhoto && marsPhoto.photos.length > 0 ? (
-            <>
-                <h1>Mars Rover Photos</h1>
-                <div>
-                    <label>
-                        Rover:
-                        <select value={rover} onChange={(e) => setRover(e.target.value)}>
-                            <option value="curiosity">Curiosity</option>
-                            <option value="opportunity">Opportunity</option>
-                            <option value="spirit">Spirit</option>
-                        </select>
-                    </label>
-                    <label>
-                        Camera:
-                        <select value={camera} onChange={(e) => setCamera(e.target.value)}>
-                            <option value="fhaz">Front Hazard Avoidance Camera (FHAZ)</option>
-                            <option value="rhaz">Rear Hazard Avoidance Camera (RHAZ)</option>
-                            <option value="mast">Mast Camera (MAST)</option>
-                            {/* Add other camera options here */}
-                        </select>
-                    </label>
-                    <label>
-                        Sol (Martian day):
-                        <input type="number" value={sol} onChange={(e) => setSol(e.target.value)} />
-                    </label>
-                </div>
-                
-                <p>{marsPhoto.photos[0].earth_date}</p>
-                <div>
-                    <h5>Landing Date: {marsPhoto.photos[0].rover.landing_date}</h5>
-                    <h5>Launch Date: {marsPhoto.photos[0].rover.launch_date}</h5>
-                    <h5>Max Date: {marsPhoto.photos[0].rover.max_date}</h5>
-                    <h5>Rover Name: {marsPhoto.photos[0].rover.name}</h5>
-                    <h5>Status: {marsPhoto.photos[0].rover.status}</h5>
-                </div> 
+    useEffect(() => {
+        const fetchMarsPhoto = async () => {
+            try {
+                const response = await fetch(
+                    `https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/photos?sol=${sol}&camera=${camera}&api_key=${apiKey}`
+                );
+                const data = await response.json();
+                //   console.log(data);
+                setMarsPhoto(data);
+            } 
+            catch (error) {
+                console.error('Error fetching photos:', error);
+            }
+        };
+        fetchMarsPhoto();
+    }, [rover, camera, sol]);
 
-                {marsPhoto.photos.map((photo) => (
-                    <React.Fragment key={photo.id}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                            <h2 style={{ color: "green" }}>
-                                {photo.camera.full_name}
-                            </h2>
-                            <h4 style={{ color: "red" }}>
-                                {photo.camera.name}
-                            </h4>
-                        </div>
-                        <img
-                            style={{ width: "100%", height: "100%" }}
-                            src={photo.img_src}
-                            alt={`Mars${photo.id}`}
-                        />
-                    </React.Fragment>
-                ))}
-            </>
-        ) : (
-            <p>No Mars photo available</p>
-        )}
+
+
+
+    const handleRoverChange = (event) => {
+        const selectedRover = event.target.value;
+        setRover(selectedRover);
+        setCamera(''); // Reset selected camera when rover changes
+    };
+
+    const handleCameraChange = (event) => {
+        setCamera(event.target.value);
+    };
+
+    const getCameraOptions = () => {
+        if (isLoading) {
+            return <option>Loading cameras...</option>;
+        }
+        if (roverData && roverData.photos && roverData.photos.length > 0) {
+            const roverPhotos = roverData.photos[0];
+            return roverPhotos.cameras.map((camera) => (
+                <option key={camera} value={camera}>
+                    {camera}
+                </option>
+            ));
+        }
+        return <option>Select a Rover first</option>;
+    };
+
+    return (
+        <div>
+            <Navbar />
+            <h1>Mars Rover Photos</h1>
+            <div>
+                <label>
+                    Select Rover:
+                    <select value={rover} onChange={handleRoverChange}>
+                        <option value="curiosity">Curiosity</option>
+                        <option value="opportunity">Opportunity</option>
+                        <option value="spirit">Spirit</option>
+                    </select>
+                </label>
+                <label>
+                    Select Camera:
+                    <select value={camera} onChange={handleCameraChange}>
+                        {getCameraOptions()}
+                    </select>
+                </label>
+                <label>
+                    Sol (Martian day):
+                    <input type="number" value={sol} onChange={(e) => setSol(e.target.value)} />
+                </label>
+            </div>
+            {marsPhoto && marsPhoto.photos && marsPhoto.photos.length > 0 ? (
+                <>
+                    <p>{marsPhoto.photos[0].earth_date}</p>
+                    <div>
+                        <h5>Landing Date: {marsPhoto.photos[0].rover.landing_date}</h5>
+                        <h5>Launch Date: {marsPhoto.photos[0].rover.launch_date}</h5>
+                        <h5>Max Date: {marsPhoto.photos[0].rover.max_date}</h5>
+                        <h5>Rover Name: {marsPhoto.photos[0].rover.name}</h5>
+                        <h5>Status: {marsPhoto.photos[0].rover.status}</h5>
+                    </div>
+                    {marsPhoto.photos.map((photo) => (
+                        <React.Fragment key={photo.id}>
+                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                                <h2 style={{ color: "green" }}>
+                                    {photo.camera.full_name}
+                                </h2>
+                                <h4 style={{ color: "red" }}>
+                                    {photo.camera.name}
+                                </h4>
+                            </div>
+                            <img
+                                style={{ width: "100%", height: "100%" }}
+                                src={photo.img_src}
+                                alt={`Mars${photo.id}`}
+                            />
+                        </React.Fragment>
+                    ))}       
+                 </>
+            ) : (
+                <p>No Mars photo available</p>
+            )}
         </div>
     );
 };
