@@ -6,5 +6,51 @@ sol (martian day) selection - specify the martial sol (day) for which you want t
 
 date the image was taken, rover's location when the image is captured ...
 
+curiosity 
+    landing date: 2012-08-06
+    launch date: 2011-11-26
+    max date: 2023-08-01
+    max sol: 3905
+    status: active
+
+opportunity 
+    landing date: 2004-01-25
+    launch date: 2003-07-07
+    max date: 2018-06-11
+    max sol: 5111
+    status: complete
+
+curiosity 
+    landing date: 2004-01-04
+    launch date: 2003-06-10
+    max date: 2010-06-10
+    max sol: 2208
+    status: complete    
+
+get photos from a specific rover and camera on a specific sol: https://api.nasa.gov/mars-photos/api/v1/rovers/{rover_name}/photos
+
+get latest photos from a specific rover: https://api.nasa.gov/mars-photos/api/v1/rovers/{rover_name}/latest_photos
+
+get information about avaialable rovers: https://api.nasa.gov/mars-photos/api/v1/rovers
+
+get photos from all rovers on a specific sol: https://api.nasa.gov/mars-photos/api/v1/rovers/all/photos
+
+curiosity
+    Front Hazard Avoidance Camera FHAZ
+    Rear Hazard Avoidance Camera RHAZ
+    Mast Camera	MAST
+    Chemistry and Camera Complex CHEMCAM
+    Mars Hand Lens Imager MAHLI	
+    Mars Descent Imager	MARDI
+    Navigation Camera NAVCAM
+
+opportunity & spirit
+    Front Hazard Avoidance Camera FHAZ
+    Rear Hazard Avoidance Camera RHAZ
+    Navigation Camera NAVCAM
+    Panoramic Camera PANCAM
+    Entry, Descent, and Landing Camera ENTRY
+    Miniature Thermal Emission Spectrometer (Mini-TES) MINITES	
+
 */
 

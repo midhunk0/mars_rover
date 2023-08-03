@@ -9,7 +9,8 @@ const Mars = () => {
     const [camera, setCamera] = useState('fhaz');
     const [sol, setSol] = useState(0);
     const [marsPhoto, setMarsPhoto] = useState(null);
-    const [roverData, setRoverData] = useState({});
+    const [roverData, setRoverData] = useState(null);
+    const [cameraData, setCameraData] = useState({}); 
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
@@ -19,7 +20,7 @@ const Mars = () => {
                     `https://api.nasa.gov/mars-photos/api/v1/manifests/${rover}?api_key=${apiKey}`
                 );
                 const data = await response.json();
-                console.log(data)
+                // console.log(data)
                 setRoverData(data.photo_manifest);
                 setIsLoading(false);
             } 
@@ -30,6 +31,23 @@ const Mars = () => {
         };
         fetchRoverData();
     }, [rover]);
+
+    useEffect(()=>{
+        const fetchCameraData=async()=>{
+            try{
+                const response=await fetch(
+                    `https://api.nasa.gov/mars-photos/api/v1/rovers?api_key=${apiKey}`
+                )
+                const data=await response.json();
+                console.log(data.rovers);
+                setCameraData(data)
+            }
+            catch(error){
+
+            }
+        }
+        fetchCameraData();
+    },[rover])
 
     useEffect(() => {
         const fetchMarsPhoto = async () => {
@@ -54,7 +72,7 @@ const Mars = () => {
     const handleRoverChange = (event) => {
         const selectedRover = event.target.value;
         setRover(selectedRover);
-        setCamera(''); // Reset selected camera when rover changes
+        setCamera(''); 
     };
 
     const handleCameraChange = (event) => {
@@ -78,7 +96,7 @@ const Mars = () => {
 
     return (
         <div>
-            <Navbar />
+            <Navbar/>
             <h1>Mars Rover Photos</h1>
             <div>
                 <label>
@@ -89,6 +107,9 @@ const Mars = () => {
                         <option value="spirit">Spirit</option>
                     </select>
                 </label>
+                {/* <div>
+                    <p>{cameraData.rovers[0].cameras[0].name}</p>
+                </div> */}
                 <label>
                     Select Camera:
                     <select value={camera} onChange={handleCameraChange}>
