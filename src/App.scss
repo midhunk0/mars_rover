@@ -2,6 +2,8 @@
 body{
     font-family: "Righteous", cursive;
     background-color: rgba(0, 0, 0, 0.895);
+    overflow-x: hidden;    
+    margin: 0;
 }
 
 .home{
@@ -35,8 +37,7 @@ body{
     display: flex;
     align-items: center;
     padding: 10px;
-    margin: -11px;
-    background-color: rgba(19, 18, 18, 0.705);
+    background-color: rgba(19, 18, 18);
     justify-content: space-between;
     height: 7vh;
     position: sticky;
@@ -49,6 +50,26 @@ body{
     .item{
         text-decoration: none;
         color: rgb(238, 226, 210);
+    }
+}
+
+.main-box{
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    color: rgb(238, 226, 210);
+
+    .top-box{
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .select{
+        border: none;
+        font-family: "Righteous", cursive;
+        background-color: rgb(27,27,27);
+        color: rgb(211, 49, 49);
     }
 }
   

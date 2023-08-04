@@ -95,35 +95,34 @@ const Mars = () => {
     };
 
     return (
-        <div>
+        <>
             <Navbar/>
-            <h1>Mars Rover Photos</h1>
-            <div>
-                <label>
-                    Select Rover:
-                    <select value={rover} onChange={handleRoverChange}>
-                        <option value="curiosity">Curiosity</option>
-                        <option value="opportunity">Opportunity</option>
-                        <option value="spirit">Spirit</option>
-                    </select>
-                </label>
-                {/* <div>
-                    <p>{cameraData.rovers[0].cameras[0].name}</p>
-                </div> */}
-                <label>
-                    Select Camera:
-                    <select value={camera} onChange={handleCameraChange}>
-                        {getCameraOptions()}
-                    </select>
-                </label>
-                <label>
-                    Sol (Martian day):
-                    <input type="number" value={sol} onChange={(e) => setSol(e.target.value)} />
-                </label>
-            </div>
-            {marsPhoto && marsPhoto.photos && marsPhoto.photos.length > 0 ? (
-                <>
-                    <p>{marsPhoto.photos[0].earth_date}</p>
+            <div className='main-box'>
+                <h1>Mars Rover Photos</h1>
+
+                    <div className='top-box'>
+                        <label >
+                            Select Rover: 
+                            <select className='select' value={rover} onChange={handleRoverChange}>
+                                <option value="curiosity">Curiosity</option>
+                                <option value="opportunity">Opportunity</option>
+                                <option value="spirit">Spirit</option>
+                            </select>
+                        </label>
+                        <label>
+                            Select Camera:
+                            <select  className='select' value={camera} onChange={handleCameraChange}>
+                                {getCameraOptions()}
+                            </select>
+                        </label>
+                        <label>
+                            Sol (Martian day):
+                            <input  className='select' type="number" value={sol} onChange={(e) => setSol(e.target.value)} />
+                        </label>
+                    </div>
+                    {marsPhoto && marsPhoto.photos && marsPhoto.photos.length > 0 ? (
+                        <>
+                        <p>Earth day: {marsPhoto.photos[0].earth_date}</p>
                     <div>
                         <h5>Landing Date: {marsPhoto.photos[0].rover.landing_date}</h5>
                         <h5>Launch Date: {marsPhoto.photos[0].rover.launch_date}</h5>
@@ -142,17 +141,18 @@ const Mars = () => {
                                 </h4>
                             </div>
                             <img
-                                style={{ width: "100%", height: "100%" }}
+                                style={{ width: "50%", height: "50%" }}
                                 src={photo.img_src}
                                 alt={`Mars${photo.id}`}
                             />
                         </React.Fragment>
                     ))}       
-                 </>
-            ) : (
-                <p>No Mars photo available</p>
-            )}
-        </div>
+                </>
+                ) : (
+                    <p>No Mars photo available</p>
+                )}
+            </div>
+        </>
     );
 };
 
