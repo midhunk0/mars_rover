@@ -121,36 +121,40 @@ const Mars = () => {
                         </label>
                     </div>
                     {marsPhoto && marsPhoto.photos && marsPhoto.photos.length > 0 ? (
-                        <>
-                        <p>Earth day: {marsPhoto.photos[0].earth_date}</p>
-                    <div>
-                        <h5>Landing Date: {marsPhoto.photos[0].rover.landing_date}</h5>
-                        <h5>Launch Date: {marsPhoto.photos[0].rover.launch_date}</h5>
-                        <h5>Max Date: {marsPhoto.photos[0].rover.max_date}</h5>
-                        <h5>Rover Name: {marsPhoto.photos[0].rover.name}</h5>
-                        <h5>Status: {marsPhoto.photos[0].rover.status}</h5>
+                    <div className='detail-box'>
+                        <div className='item-details'>
+                            <p>Rover Name: {marsPhoto.photos[0].rover.name}</p>
+                            <p>Landing Date: {marsPhoto.photos[0].rover.landing_date}</p>
+                            <p>Launch Date: {marsPhoto.photos[0].rover.launch_date}</p>
+                            <p>Max Date: {marsPhoto.photos[0].rover.max_date}</p>
+                            <p>Earth day: {marsPhoto.photos[0].earth_date}</p>
+                            <p>Status: {marsPhoto.photos[0].rover.status}</p>
+                        </div>
+                        <div className='image'>
+                        {marsPhoto.photos.map((photo) => (
+                            <React.Fragment key={photo.id}>
+                                <div className='image-headings'>
+                                    <h2 className='h2'>
+                                        {photo.camera.full_name}
+                                    </h2>
+                                    <h4 className='h4'>
+                                        {photo.camera.name}
+                                    </h4>
+                                </div>
+                                
+                                <img
+                                    className='img'
+                                    src={photo.img_src}
+                                    alt={`Mars${photo.id}`}
+                                />
+                            </React.Fragment>
+                        ))}      
+                        </div> 
                     </div>
-                    {marsPhoto.photos.map((photo) => (
-                        <React.Fragment key={photo.id}>
-                            <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                                <h2 style={{ color: "green" }}>
-                                    {photo.camera.full_name}
-                                </h2>
-                                <h4 style={{ color: "red" }}>
-                                    {photo.camera.name}
-                                </h4>
-                            </div>
-                            <img
-                                style={{ width: "50%", height: "50%" }}
-                                src={photo.img_src}
-                                alt={`Mars${photo.id}`}
-                            />
-                        </React.Fragment>
-                    ))}       
-                </>
                 ) : (
                     <p>No Mars photo available</p>
                 )}
+                
             </div>
         </>
     );
