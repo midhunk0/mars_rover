@@ -139,8 +139,8 @@ const Mars = () => {
                         </button>
                         <div className="image-slider">
                             <div className='headings'>
-                            <h2 className='h2'>{marsPhoto.photos[currentIndex].camera.full_name}</h2>
-                            <h4 className='h4'>{marsPhoto.photos[currentIndex].camera.name}</h4>
+                                <h2 className='h2'>{marsPhoto.photos[currentIndex].camera.full_name}</h2>
+                                <h4 className='h4'>{marsPhoto.photos[currentIndex].camera.name}</h4>
                             </div>
                             <img
                                 className='slider-image'

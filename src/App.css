@@ -163,6 +163,8 @@ body{
 
 .headings{
     display: flex;
+    align-items: center;
+    gap: 10px;
 }
 
 .prev-btn,.next-btn {
@@ -195,8 +197,8 @@ body{
 }
 
 .slider-image {
-    height: 30%;
-    width: 30%; 
+    height: 35%;
+    width: 35%; 
     display: flex;
     background-size: cover;
     background-position: center;
