@@ -6,13 +6,13 @@ const apiKey = process.env.REACT_APP_NASA_KEY;
 
 const Mars = () => {
     const [rover, setRover] = useState('curiosity');
-    const [camera, setCamera] = useState('fhaz');
+    const [camera, setCamera] = useState('');
     const [sol, setSol] = useState(0);
     const [marsPhoto, setMarsPhoto] = useState(null);
     const [roverData, setRoverData] = useState(null);
     const [cameraData, setCameraData] = useState({});
     const [isLoading, setIsLoading] = useState(true);
-    const [currentIndex, setCurrentIndex] = useState(0); // Moved state to the top level
+    const [currentIndex, setCurrentIndex] = useState(0); 
 
     useEffect(() => {
         const fetchRoverData = async () => {
@@ -21,7 +21,7 @@ const Mars = () => {
                     `https://api.nasa.gov/mars-photos/api/v1/manifests/${rover}?api_key=${apiKey}`
                 );
                 const data = await response.json();
-                // console.log(data)
+                console.log(data)
                 setRoverData(data.photo_manifest);
                 setIsLoading(false);
             } catch (error) {
@@ -31,6 +31,7 @@ const Mars = () => {
         };
         fetchRoverData();
     }, [rover]);
+    
 
     useEffect(() => {
         const fetchCameraData = async () => {
@@ -40,6 +41,12 @@ const Mars = () => {
                 );
                 const data = await response.json();
                 console.log(data.rovers);
+
+                // Find the first available camera for the selected rover
+                if (data.rovers && data.rovers[rover] && data.rovers[rover].cameras.length > 0) {
+                    setCamera(data.rovers[rover].cameras[0]); // Set the default camera
+                }
+
                 setCameraData(data);
             } catch (error) {
                 console.error('Error fetching camera data:', error);
@@ -55,9 +62,9 @@ const Mars = () => {
                     `https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/photos?sol=${sol}&camera=${camera}&api_key=${apiKey}`
                 );
                 const data = await response.json();
-                //   console.log(data);
+                  console.log(data);
                 setMarsPhoto(data);
-                setCurrentIndex(0); // Reset currentIndex when new photos are fetched
+                setCurrentIndex(0); 
             } catch (error) {
                 console.error('Error fetching photos:', error);
             }
