@@ -7,6 +7,9 @@ const apiKey = process.env.REACT_APP_NASA_KEY;
 const Mars = () => {
     const [rover, setRover] = useState("Curiosity");
     const [roverDetails, setRoverDetails] = useState(null);
+    const [camera, setCamera] = useState("");
+    const [cameraDetails, setCameraDetails] = useState([]);
+
 
     //rover details
     useEffect(() => {
@@ -14,26 +17,15 @@ const Mars = () => {
             try {
                 const res = await fetch(`https://api.nasa.gov/mars-photos/api/v1/manifests/${rover}?api_key=${apiKey}`);
                 const roverData = await res.json();
-                console.log(roverData);
+                // console.log(roverData);
                 setRoverDetails(roverData.photo_manifest);
-            } catch (error) {
+            } 
+            catch (error) {
                 console.error("Error fetching rover data:", error);
             }
         };
         fetchRoverData();
     }, [rover]);
-
-    const renderCameraDetails = () => {
-        if (roverDetails?.photos?.length > 0) {
-            const cameras = roverDetails.photos[0].cameras;
-            return cameras.map((camera) => (
-                <p key={camera} style={{ color: "white" }}>
-                    {camera}
-                </p>
-            ));
-        }
-        return <p style={{ color: "white" }}>Select a Rover first</p>;
-    };
 
     const renderRoverDetails = () => {
         if (roverDetails) {
@@ -51,12 +43,58 @@ const Mars = () => {
         return null;
     };
 
+    //camera details
+    useEffect(() => {
+        const fetchCameras = async () => {
+            try {
+                const res = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}?api_key=${apiKey}`);
+                const data = await res.json();
+                
+                if (data.rover && data.rover.cameras) {
+                    setCameraDetails(data.rover.cameras);
+                }
+                console.log(data)
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+
+        fetchCameras();
+    }, [rover]);
+
+    const renderCameraDetails = () => {
+        if (cameraDetails) {
+            return (
+                <div style={{color:"white"}}>
+                    {cameraDetails.map((camera, index) => (
+                        <p>{camera.full_name}</p>
+                    ))}
+                </div>
+            );
+        }
+        return null;
+    };
+
+    const cameraSelection = () => {
+        if(cameraDetails){
+            return(
+                <div>
+                    <select value={camera} onChange={(e) => setCamera(e.target.value)}>
+                        {cameraDetails.map((camera, index) => (
+                            <option>{camera.name}</option>
+                        ))}
+                    </select>
+                </div>
+            )
+        }
+    }
+
     return (
         <>
             <Navbar />
             <div style={{ display: "flex", flexDirection: "column" }}>
                 <div style={{ display: "flex", alignItems: "center", height: "30px" }}>
-                    <p style={{ color: "white", marginRight: "10px" }}>Choose a rover: </p>
+                    <p style={{ color: "white", margin: "10px" }}>Choose a rover: </p>
                     <select value={rover} onChange={(e) => setRover(e.target.value)}>
                         <option>Curiosity</option>
                         <option>Opportunity</option>
@@ -69,9 +107,13 @@ const Mars = () => {
                         {renderRoverDetails()}
                     </div>
                     <div>
-                        <h2 style={{ color: "white" }}>Cameras Available</h2>
+                        <h2 style={{color:"white"}}>Available Cameras</h2>
                         {renderCameraDetails()}
                     </div>
+                </div>
+                <div style={{display:"flex", alignItems: "center", height: "30px"}}>
+                    <p style={{ color: "white", margin: "10px" }}>Choose a camers: </p>
+                    {cameraSelection()}
                 </div>
             </div>
         </>
