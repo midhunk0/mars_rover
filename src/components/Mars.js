@@ -9,7 +9,10 @@ const Mars = () => {
     const [roverDetails, setRoverDetails] = useState(null);
     const [camera, setCamera] = useState("");
     const [cameraDetails, setCameraDetails] = useState([]);
-
+    const [dateFrom, setDateFrom] = useState("Earth Date");
+    const [sol, setSol] = useState(0);
+    const [date, setDate] = useState("");
+    const [image, setImage] = useState([]);
 
     //rover details
     useEffect(() => {
@@ -48,12 +51,12 @@ const Mars = () => {
         const fetchCameras = async () => {
             try {
                 const res = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}?api_key=${apiKey}`);
-                const data = await res.json();
+                const cameraData = await res.json();
                 
-                if (data.rover && data.rover.cameras) {
-                    setCameraDetails(data.rover.cameras);
+                if (cameraData.rover && cameraData.rover.cameras) {
+                    setCameraDetails(cameraData.rover.cameras);
                 }
-                console.log(data)
+                // console.log(data)
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -75,6 +78,7 @@ const Mars = () => {
         return null;
     };
 
+    //image from a rover and camera on a date or sol
     const cameraSelection = () => {
         if(cameraDetails){
             return(
@@ -89,6 +93,21 @@ const Mars = () => {
         }
     }
 
+    useEffect(() => {
+        const fetchImages = async () => {
+            try{
+                const res = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/photos?sol=${sol}&camera=${camera}&api_key=${apiKey}`);
+                const imageData = await res.json();
+                setImage(imageData.photos);
+                // console.log(data);
+            }
+            catch(error){
+                console.error("Error while fetching images", error);
+            }
+        }
+        fetchImages();
+    }, [rover, sol, camera])
+
     return (
         <>
             <Navbar />
@@ -101,12 +120,12 @@ const Mars = () => {
                         <option>Spirit</option>
                     </select>
                 </div>
-                <div style={{display:"flex", justifyContent:"space-around"}}>
-                    <div>
+                <div style={{display:"flex", gap:"10px", margin:"10px"}}>
+                    <div style={{width:"50%", border:"1px solid white", borderRadius:"10px", padding:"20px", background:"#F45050"}}>
                         <h2 style={{ color: "white" }}>Rover Details</h2>
                         {renderRoverDetails()}
                     </div>
-                    <div>
+                    <div style={{width:"50%", border:"1px solid white", borderRadius:"10px", padding:"20px", background:"#F45050"}}>
                         <h2 style={{color:"white"}}>Available Cameras</h2>
                         {renderCameraDetails()}
                     </div>
@@ -114,6 +133,28 @@ const Mars = () => {
                 <div style={{display:"flex", alignItems: "center", height: "30px"}}>
                     <p style={{ color: "white", margin: "10px" }}>Choose a camers: </p>
                     {cameraSelection()}
+                    <p style={{color:"white", margin:"10px"}}>Earth date or Mars date</p>
+                    <select value={dateFrom} onChange={(e) => setDateFrom(e.target.value)}>
+                        <option>Earth Date</option>
+                        <option>Mars Date</option>
+                    </select>
+                    {dateFrom === "Earth Date" ? (
+                        <>
+                            <p style={{color:"white", margin:"10px"}}>Enter a date in Earth</p>
+                            <input type="date" value={date} onChange={(e) => setDate(e.target.value)}/>
+                        </>
+                        ):(
+                        <>
+                            <p style={{color:"white", margin:"10px"}}>Enter a date in Mars (sol)</p>
+                            <input type="number" value={sol} onChange={(e) => setSol(e.target.value)}/>
+                        </>
+                    )}
+                </div>
+                <div style={{display:"grid", placeItems:"center", marginTop:"20px", gap:"10px"}}>
+                    {/* Render the fetched images */}
+                    {image.map((img, index) => (
+                        <img key={index} src={img.img_src} alt={"images"} style={{ maxWidth: "100%" }} />
+                    ))}
                 </div>
             </div>
         </>
