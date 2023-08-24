@@ -9,7 +9,7 @@ const Mars = () => {
     const [roverDetails, setRoverDetails] = useState(null);
     const [camera, setCamera] = useState("");
     const [cameraDetails, setCameraDetails] = useState([]);
-    const [dateFrom, setDateFrom] = useState("Earth Date");
+    const [dateFrom, setDateFrom] = useState("Mars Date");
     const [sol, setSol] = useState(0);
     const [date, setDate] = useState("");
     const [image, setImage] = useState([]);
@@ -70,7 +70,7 @@ const Mars = () => {
             return (
                 <div style={{color:"white"}}>
                     {cameraDetails.map((camera, index) => (
-                        <p>{camera.full_name}</p>
+                        <p key={index}>{camera.full_name}</p>
                     ))}
                 </div>
             );
@@ -85,7 +85,7 @@ const Mars = () => {
                 <div>
                     <select value={camera} onChange={(e) => setCamera(e.target.value)}>
                         {cameraDetails.map((camera, index) => (
-                            <option>{camera.name}</option>
+                            <option key={index}>{camera.name}</option>
                         ))}
                     </select>
                 </div>
@@ -99,7 +99,7 @@ const Mars = () => {
                 const res = await fetch(`https://api.nasa.gov/mars-photos/api/v1/rovers/${rover}/photos?sol=${sol}&camera=${camera}&api_key=${apiKey}`);
                 const imageData = await res.json();
                 setImage(imageData.photos);
-                // console.log(data);
+                console.log(imageData.photos);
             }
             catch(error){
                 console.error("Error while fetching images", error);
@@ -111,49 +111,48 @@ const Mars = () => {
     return (
         <>
             <Navbar />
-            <div style={{ display: "flex", flexDirection: "column" }}>
-                <div style={{ display: "flex", alignItems: "center", height: "30px" }}>
-                    <p style={{ color: "white", margin: "10px" }}>Choose a rover: </p>
+            <div className="main-div">
+                <div className="rover-selection">
+                    <p>Choose a rover: </p>
                     <select value={rover} onChange={(e) => setRover(e.target.value)}>
                         <option>Curiosity</option>
                         <option>Opportunity</option>
                         <option>Spirit</option>
                     </select>
                 </div>
-                <div style={{display:"flex", gap:"10px", margin:"10px"}}>
-                    <div style={{width:"50%", border:"1px solid white", borderRadius:"10px", padding:"20px", background:"#F45050"}}>
+                <div className="details">
+                    <div className="inner-details">
                         <h2 style={{ color: "white" }}>Rover Details</h2>
                         {renderRoverDetails()}
                     </div>
-                    <div style={{width:"50%", border:"1px solid white", borderRadius:"10px", padding:"20px", background:"#F45050"}}>
+                    <div className="inner-details">
                         <h2 style={{color:"white"}}>Available Cameras</h2>
                         {renderCameraDetails()}
                     </div>
                 </div>
-                <div style={{display:"flex", alignItems: "center", height: "30px"}}>
-                    <p style={{ color: "white", margin: "10px" }}>Choose a camers: </p>
+                <div className="image-selection">
+                    <p>Choose a camers: </p>
                     {cameraSelection()}
-                    <p style={{color:"white", margin:"10px"}}>Earth date or Mars date</p>
+                    <p>Earth date or Mars date</p>
                     <select value={dateFrom} onChange={(e) => setDateFrom(e.target.value)}>
                         <option>Earth Date</option>
                         <option>Mars Date</option>
                     </select>
                     {dateFrom === "Earth Date" ? (
                         <>
-                            <p style={{color:"white", margin:"10px"}}>Enter a date in Earth</p>
+                            <p>Enter a date in Earth</p>
                             <input type="date" value={date} onChange={(e) => setDate(e.target.value)}/>
                         </>
                         ):(
                         <>
-                            <p style={{color:"white", margin:"10px"}}>Enter a date in Mars (sol)</p>
+                            <p>Enter a date in Mars (sol)</p>
                             <input type="number" value={sol} onChange={(e) => setSol(e.target.value)}/>
                         </>
                     )}
                 </div>
-                <div style={{display:"grid", placeItems:"center", marginTop:"20px", gap:"10px"}}>
-                    {/* Render the fetched images */}
-                    {image.map((img, index) => (
-                        <img key={index} src={img.img_src} alt={"images"} style={{ maxWidth: "100%" }} />
+                <div className="images">
+                    {image && image.map((img, index) => (
+                        <img key={index} src={img.img_src} alt={"images"} style={{ width: "60vh", height:"60vh" }} />
                     ))}
                 </div>
             </div>
