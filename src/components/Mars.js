@@ -143,7 +143,7 @@ const Mars = () => {
                             <p>Enter a date in Earth</p>
                             <input type="date" value={date} onChange={(e) => setDate(e.target.value)}/>
                         </>
-                        ):(
+                    ):(
                         <>
                             <p>Enter a date in Mars (sol)</p>
                             <input type="number" value={sol} onChange={(e) => setSol(e.target.value)}/>
