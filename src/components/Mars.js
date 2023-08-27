@@ -83,7 +83,7 @@ const Mars = () => {
         if(cameraDetails){
             return(
                 <div>
-                    <select value={camera} onChange={(e) => setCamera(e.target.value)}>
+                    <select className="selection" value={camera} onChange={(e) => setCamera(e.target.value)}>
                         {cameraDetails.map((camera, index) => (
                             <option key={index}>{camera.name}</option>
                         ))}
@@ -114,7 +114,7 @@ const Mars = () => {
             <div className="main-div">
                 <div className="rover-selection">
                     <p>Choose a rover: </p>
-                    <select value={rover} onChange={(e) => setRover(e.target.value)}>
+                    <select className="selection" value={rover} onChange={(e) => setRover(e.target.value)}>
                         <option>Curiosity</option>
                         <option>Opportunity</option>
                         <option>Spirit</option>
@@ -134,19 +134,19 @@ const Mars = () => {
                     <p>Choose a camers: </p>
                     {cameraSelection()}
                     <p>Earth date or Mars date</p>
-                    <select value={dateFrom} onChange={(e) => setDateFrom(e.target.value)}>
+                    <select className="selection" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)}>
                         <option>Earth Date</option>
                         <option>Mars Date</option>
                     </select>
                     {dateFrom === "Earth Date" ? (
                         <>
                             <p>Enter a date in Earth</p>
-                            <input type="date" value={date} onChange={(e) => setDate(e.target.value)}/>
+                            <input className="selection" type="date" value={date} onChange={(e) => setDate(e.target.value)}/>
                         </>
                     ):(
                         <>
                             <p>Enter a date in Mars (sol)</p>
-                            <input type="number" value={sol} onChange={(e) => setSol(e.target.value)}/>
+                            <input className="selection" type="number" value={sol} onChange={(e) => setSol(e.target.value)}/>
                         </>
                     )}
                 </div>
