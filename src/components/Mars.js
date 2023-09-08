@@ -131,28 +131,34 @@ const Mars = () => {
                     </div>
                 </div>
                 <div className="image-selection">
-                    <p>Choose a camers: </p>
-                    {cameraSelection()}
-                    <p>Earth date or Mars date</p>
-                    <select className="selection" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)}>
-                        <option>Earth Date</option>
-                        <option>Mars Date</option>
-                    </select>
-                    {dateFrom === "Earth Date" ? (
-                        <>
-                            <p>Enter a date in Earth</p>
-                            <input className="selection" type="date" value={date} onChange={(e) => setDate(e.target.value)}/>
-                        </>
-                    ):(
-                        <>
-                            <p>Enter a date in Mars (sol)</p>
-                            <input className="selection" type="number" value={sol} onChange={(e) => setSol(e.target.value)}/>
-                        </>
-                    )}
+                    <div className="choose">
+                        <p>Choose a camers: </p>
+                        {cameraSelection()}
+                    </div>
+                    <div className="choose">
+                        <p>Earth date or Mars date: </p>
+                        <select className="selection" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)}>
+                            <option>Earth Date</option>
+                            <option>Mars Date</option>
+                        </select>
+                    </div>
+                    <div className="choose">
+                        {dateFrom === "Earth Date" ? (
+                            <>
+                                <p>Enter a date in Earth</p>
+                                <input className="selection" type="date" value={date} onChange={(e) => setDate(e.target.value)}/>
+                            </>
+                        ):(
+                            <>
+                                <p>Enter a date in Mars (sol)</p>
+                                <input className="selection" type="number" value={sol} onChange={(e) => setSol(e.target.value)}/>
+                            </>
+                        )}
+                    </div>
                 </div>
                 <div className="images">
                     {image && image.map((img, index) => (
-                        <img key={index} src={img.img_src} alt={"images"} style={{ width: "60vh", height:"60vh" }} />
+                        <img key={index} src={img.img_src} alt={"images"}  />
                     ))}
                 </div>
             </div>
